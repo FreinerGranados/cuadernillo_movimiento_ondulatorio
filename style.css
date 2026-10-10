@@ -69,7 +69,7 @@ body {
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    background-image: url('/imagenes/fondo.png');
+    background-image: url('./public/imagenes/fondo.png');
     background-size: cover;
     background-position: center;
     background-color: transparent;
@@ -82,7 +82,7 @@ body {
 
 /* Portada specfics */
 .page.cover {
-    background-image: url('/imagenes/portada.png');
+    background-image: url('./public/imagenes/portada.png');
     background-size: cover;
     background-position: center;
     background-color: transparent;
