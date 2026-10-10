@@ -1,4 +1,5 @@
 import { createIcons, Home, ChevronLeft, ChevronRight, List, Palette, ZoomIn, ZoomOut, Move } from 'lucide';
+import 'katex/dist/katex.min.css';
 import katex from 'katex';
 import renderMathInElement from 'katex/dist/contrib/auto-render.mjs';
 import { pages } from './pages.js';
