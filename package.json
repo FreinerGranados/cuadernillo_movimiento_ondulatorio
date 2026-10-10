@@ -1,0 +1,22 @@
+{
+  "name": "cuadernillo_3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "vite": "^8.3.4"
+  },
+  "dependencies": {
+    "katex": "^0.19.0",
+    "lucide": "^1.55.0",
+    "plotly.js-dist-min": "^4.1.2",
+    "three": "^0.186.1"
+  }
+}

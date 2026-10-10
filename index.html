@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movimiento Ondulatorio - Física III</title>
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="/node_modules/katex/dist/katex.min.css">
+    
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <div id="app">
+        <main id="book-container">
+            <!-- Dynamic pages will be inserted here -->
+        </main>
+        
+        <nav id="bottom-nav">
+            <button id="btn-home" aria-label="Inicio" title="Ir al inicio">
+                <i data-lucide="home"></i>
+            </button>
+            <button id="btn-prev" aria-label="Página anterior" title="Anterior">
+                <i data-lucide="chevron-left"></i> Anterior
+            </button>
+            
+            <div id="page-indicator">
+                <span>Página </span><span id="current-page">1</span> de <span id="total-pages">17</span>
+            </div>
+            
+            <button id="btn-next" aria-label="Página siguiente" title="Siguiente">
+                Siguiente <i data-lucide="chevron-right"></i>
+            </button>
+            <button id="btn-index" aria-label="Índice" title="Ir al índice">
+                <i data-lucide="list"></i>
+            </button>
+        </nav>
+        
+        <footer id="main-footer">
+            <p>Cuaderno creado por: <span contenteditable="true" class="editable-name">[nombre del autor o integrantes]</span> | Física III</p>
+        </footer>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
