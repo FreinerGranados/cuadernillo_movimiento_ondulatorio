@@ -1,5 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
+[hidden] { display: none !important; }
+#menu-toggle {
+    position: fixed; top: 16px; left: 16px; z-index: 100;
+    width: 48px; height: 48px; border: 0; border-radius: 12px;
+    background: #3949ab; color: white; font-size: 26px; cursor: pointer;
+    box-shadow: 0 4px 16px #1a237e30;
+}
+#menu-backdrop { position: fixed; inset: 0; z-index: 110; background: #10173380; }
+#side-menu {
+    position: fixed; inset: 0 auto 0 0; width: min(320px, 88vw); z-index: 120;
+    padding: 24px; background: #fdfbf7; box-shadow: 8px 0 32px #1a237e26;
+    transform: translateX(-110%); visibility: hidden; transition: transform .2s ease, visibility .2s;
+    overflow-y: auto;
+}
+#side-menu.is-open { transform: translateX(0); visibility: visible; }
+.menu-heading { display: flex; align-items: center; justify-content: space-between; font-size: 22px; }
+#menu-close { border: 0; background: transparent; color: inherit; font-size: 32px; cursor: pointer; padding: 4px 12px; }
+.menu-caption { margin: 8px 0 28px; font-size: 14px; color: #59638a; }
+.menu-links { display: grid; gap: 12px; }
+.menu-links a { display: block; padding: 16px; border-radius: 12px; color: #1a237e; text-decoration: none; line-height: 1.5; background: #edf0fb; }
+.menu-links a:hover { background: #e1e5fa; }
+.menu-links a[aria-current="page"] { background: #3949ab; color: white; font-weight: 600; }
+:focus-visible { outline: 3px solid #e08a00; outline-offset: 4px; }
+body.menu-open { overflow: hidden; }
+#section-heading { width: 100%; max-width: 900px; padding: 0 48px 20px; }
+#section-heading span { color: #59638a; font-size: 13px; }
+#view-title { font-size: clamp(20px, 4vw, 28px); margin-top: 4px; }
+#simulator-container { width: 100%; border-radius: 12px; overflow: hidden; background: white; box-shadow: var(--shadow-soft); }
+#simulator-container iframe { display: block; width: 100%; height: calc(100dvh - 150px); min-height: 480px; border: 0; }
+@media (max-width: 600px) {
+    #section-heading { padding: 0 0 20px 54px; }
+    #menu-toggle { left: 10px; top: 18px; width: 44px; height: 44px; }
+    #simulator-container iframe { height: calc(100dvh - 140px); }
+}
+@media (prefers-reduced-motion: reduce) { #side-menu { transition: none; } }
+
 :root {
     --color-bg: #fdfbf7; /* Blanco cálido */
     --color-pastel-pink: #fce4ec;

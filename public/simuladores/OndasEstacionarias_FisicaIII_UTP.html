@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ondas estacionarias en una cuerda — Física III · UTP</title>
+<meta name="author" content="Eilyn Daniela Acevedo, Sara Vanesa García, Freiner Yulian Granados">
+<style>
+  :root{
+    --azul:#0b2f5b; --azul2:#1a4f8e; --acento:#0e9aa7;
+    --rojo:#d64545; --verde:#1f9d55; --naranja:#e08a00; --morado:#7b4fc9;
+    --fondo:#f3f5f9; --tarjeta:#ffffff; --texto:#1d2733; --suave:#5b6878; --borde:#dde3ec;
+    --radio:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--fondo);color:var(--texto);line-height:1.6;font-size:16px;
+    overflow-wrap:break-word;
+  }
+  h1,h2,h3{line-height:1.25;margin:0 0 .6em}
+  h2{font-size:clamp(1.4rem,4vw,1.9rem);color:var(--azul)}
+  h3{font-size:1.1rem;color:var(--azul2)}
+  p{margin:0 0 .9em}
+  ul{margin:0 0 .9em;padding-left:1.2em}
+  li{margin-bottom:.35em}
+  math{font-size:1.12em}
+  .eq{overflow-x:auto;overflow-y:hidden;padding:.35em 0;margin:.4em 0 .8em;text-align:center;max-width:100%}
+  .eq math{display:block;margin:0 auto}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ---------- Barra de navegación ---------- */
+  .nav{position:sticky;top:0;z-index:20;background:var(--azul);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .nav-in{max-width:1150px;margin:0 auto;display:flex;align-items:center;gap:1rem;padding:.45rem 1rem;min-height:52px}
+  .marca{font-weight:700;font-size:.95rem;white-space:nowrap}
+  .links{display:flex;gap:.3rem;overflow-x:auto;margin-left:auto;scrollbar-width:none}
+  .links::-webkit-scrollbar{display:none}
+  .links a{color:#fff;text-decoration:none;padding:.35rem .8rem;border-radius:999px;font-size:.92rem;white-space:nowrap}
+  .links a:hover,.links a:focus-visible{background:rgba(255,255,255,.16);outline:none}
+  @media (max-width:640px){.marca{display:none}.links{margin-left:0}}
+
+  /* ---------- Páginas ---------- */
+  .pagina{padding:3rem 1rem;scroll-margin-top:56px}
+  .contenido{max-width:1150px;margin:0 auto}
+  .intro{color:var(--suave);max-width:70ch;margin-bottom:1.6rem}
+  .tarjeta{background:var(--tarjeta);border:1px solid var(--borde);border-radius:var(--radio);padding:1.3rem 1.4rem;box-shadow:0 2px 10px rgba(16,40,80,.05);min-width:0}
+  .rejilla{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+
+  /* ---------- Portada ---------- */
+  .portada{
+    min-height:calc(100vh - 52px);display:flex;align-items:center;justify-content:center;
+    padding:3rem 1.2rem;color:#fff;
+    background:radial-gradient(circle at 20% 10%,#2a64a8 0,transparent 55%),linear-gradient(160deg,var(--azul),#123f75);
+  }
+  .portada-in{width:100%;max-width:780px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.3rem}
+  .inst{font-size:clamp(1rem,3.4vw,1.35rem);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0}
+  .asig{font-size:clamp(.95rem,2.8vw,1.1rem);opacity:.9;margin:0}
+  .onda-portada{width:100%;max-width:560px;height:auto}
+  .titulo{font-size:clamp(1.9rem,6.5vw,3.1rem);font-weight:800;margin:0;line-height:1.15}
+  .subtitulo{font-size:clamp(1rem,3vw,1.2rem);opacity:.92;margin:0}
+  .integrantes{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:var(--radio);padding:1rem 1.6rem;width:100%;max-width:440px}
+  .integrantes h3{color:#fff;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:.6rem}
+  .integrantes ul{list-style:none;padding:0;margin:0}
+  .integrantes li{font-size:clamp(1rem,3vw,1.15rem);font-weight:600;margin:.25em 0}
+  .fecha{opacity:.85;margin:0}
+  .btn-portada{display:inline-block;background:#fff;color:var(--azul);font-weight:700;text-decoration:none;padding:.7rem 1.5rem;border-radius:999px}
+
+  /* ---------- Simulador ---------- */
+  .sim{display:grid;gap:1.2rem;grid-template-columns:330px minmax(0,1fr);align-items:start}
+  @media (max-width:920px){.sim{grid-template-columns:minmax(0,1fr)}}
+  .control{margin-bottom:1.05rem}
+  .control-cab{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.2rem .8rem;margin-bottom:.35rem}
+  .control-cab label{font-weight:600}
+  .control-cab output{font-family:ui-monospace,Consolas,monospace;font-size:.92rem;background:var(--fondo);border:1px solid var(--borde);border-radius:6px;padding:.05rem .5rem;white-space:nowrap}
+  .ayuda{display:block;font-size:.82rem;color:var(--suave);margin-top:.25rem}
+  input[type=range]{width:100%;accent-color:var(--azul2);margin:0;height:28px}
+  .check{display:flex;align-items:center;gap:.5rem;margin:.4rem 0;font-size:.95rem;cursor:pointer}
+  .check input{width:18px;height:18px;accent-color:var(--azul2)}
+  .botones{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+  button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:.65rem 1.1rem;cursor:pointer}
+  #btnPlay{background:var(--verde);color:#fff;flex:1 1 140px}
+  #btnPlay.activo{background:var(--rojo)}
+  #btnReset{background:var(--fondo);color:var(--texto);border:1px solid var(--borde);flex:1 1 120px}
+
+  .grafica{display:flex;flex-direction:column;gap:.8rem}
+  .lienzo{position:relative;width:100%;aspect-ratio:16/9;min-height:240px;background:#fbfcfe;border:1px solid var(--borde);border-radius:10px;overflow:hidden}
+  .lienzo canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .leyenda{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;font-size:.88rem;color:var(--suave);margin:0;padding:0;list-style:none}
+  .leyenda li{display:flex;align-items:center;gap:.4rem;margin:0}
+  .sw{display:inline-block;width:22px;height:0;border-top:4px solid var(--azul2);flex:none}
+  .sw.env{border-top:2px dashed #8a97a8}
+  .sw.c1{border-top:2px solid var(--naranja)}
+  .sw.c2{border-top:2px solid var(--morado)}
+  .pt{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--rojo);flex:none}
+  .pt.anti{background:none;border:0;border-left:2px dotted var(--verde);border-radius:0;width:2px;height:14px}
+  .estado{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.88rem;color:var(--suave)}
+  figcaption{font-size:.85rem;color:var(--suave)}
+
+  .resultados{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));margin-top:1.2rem}
+  .res{background:var(--tarjeta);border:1px solid var(--borde);border-radius:12px;padding:1rem;text-align:center;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+  .res .et{font-size:.88rem;font-weight:600;color:var(--suave)}
+  .res .val{font-size:clamp(1.25rem,3.6vw,1.5rem);font-weight:800;color:var(--azul2);font-variant-numeric:tabular-nums}
+  .res .eq{margin:.2rem 0 0;padding:0}
+
+  .tabla-wrap{overflow-x:auto;margin-top:.6rem}
+  table{border-collapse:collapse;width:100%;min-width:420px;font-variant-numeric:tabular-nums}
+  th,td{padding:.55rem .7rem;border-bottom:1px solid var(--borde);text-align:center;white-space:nowrap}
+  th{background:var(--fondo);color:var(--azul);font-size:.9rem}
+  tr.actual td{background:#e8f1fb;font-weight:700}
+
+  .refs li{margin-bottom:.7em}
+  footer{background:var(--azul);color:#fff;text-align:center;padding:1.4rem 1rem;font-size:.9rem}
+  footer p{margin:.2rem 0;opacity:.9}
+
+  /* ---------- Impresión / PDF: cada sección en su propia hoja, sin cortes ---------- */
+  @page{size:letter;margin:16mm 14mm}
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff;font-size:11.5pt}
+    .nav,.botones,.btn-portada{display:none !important}
+    .portada{min-height:auto;height:247mm;padding:0;break-after:page}
+    .pagina{padding:0;break-before:page}
+    .sim{grid-template-columns:1fr}
+    .tarjeta,.res,.control,.lienzo,figure,table,tr,.eq{break-inside:avoid}
+    h2,h3{break-after:avoid}
+    .tarjeta{box-shadow:none}
+    .rejilla{grid-template-columns:1fr 1fr}
+    footer{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Secciones">
+  <div class="nav-in">
+    <span class="marca">Física III · Ondas estacionarias</span>
+    <div class="links">
+      <a href="#portada">Portada</a>
+      <a href="#teoria">Marco teórico</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#referencias">Referencias</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= PORTADA ================= -->
+<header id="portada" class="portada">
+  <div class="portada-in">
+    <p class="inst">Universidad Tecnológica de Pereira</p>
+    <p class="asig">Asignatura: Física III &nbsp;·&nbsp; Tema: Movimiento ondulatorio</p>
+    <svg class="onda-portada" viewBox="0 0 600 140" aria-hidden="true">
+      <path id="envSup" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="6 6"/>
+      <path id="envInf" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="6 6"/>
+      <path id="cuerdaPortada" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <rect x="0" y="40" width="8" height="60" fill="#fff" rx="2"/>
+      <rect x="592" y="40" width="8" height="60" fill="#fff" rx="2"/>
+    </svg>
+    <h1 class="titulo">Ondas estacionarias en una cuerda</h1>
+    <p class="subtitulo">Marco teórico y simulador interactivo</p>
+    <div class="integrantes">
+      <h3>Integrantes</h3>
+      <ul>
+        <li>Eilyn Daniela Acevedo</li>
+        <li>Sara Vanesa García</li>
+        <li>Freiner Yulian Granados</li>
+      </ul>
+    </div>
+    <p class="fecha">Pereira, noviembre de 2026</p>
+    <a class="btn-portada" href="#simulador">Ir al simulador</a>
+  </div>
+</header>
+
+<main>
+<!-- ================= MARCO TEÓRICO ================= -->
+<section id="teoria" class="pagina">
+  <div class="contenido">
+    <h2>Marco teórico</h2>
+    <p class="intro">Una cuerda tensa con sus dos extremos fijos solo puede vibrar de forma sostenida en ciertas frecuencias. En ellas, las ondas que viajan y se reflejan en los extremos se superponen y producen un patrón que no avanza: la onda estacionaria.</p>
+
+    <div class="rejilla">
+      <article class="tarjeta">
+        <h3>1. Superposición de dos ondas viajeras</h3>
+        <p>Dos ondas de igual amplitud y frecuencia que viajan en sentidos opuestos:</p>
+        <div class="eq"><math display="block">
+          <msub><mi>y</mi><mn>1</mn></msub><mo>=</mo><mfrac><mi>A</mi><mn>2</mn></mfrac><mi>sen</mi><mo>(</mo><mi>k</mi><mi>x</mi><mo>−</mo><mi>ω</mi><mi>t</mi><mo>)</mo><mo>,</mo><mspace width="1em"/>
+          <msub><mi>y</mi><mn>2</mn></msub><mo>=</mo><mfrac><mi>A</mi><mn>2</mn></mfrac><mi>sen</mi><mo>(</mo><mi>k</mi><mi>x</mi><mo>+</mo><mi>ω</mi><mi>t</mi><mo>)</mo>
+        </math></div>
+        <p>Al sumarlas resulta la onda estacionaria:</p>
+        <div class="eq"><math display="block">
+          <mi>y</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>t</mi><mo>)</mo><mo>=</mo><mi>A</mi><mspace width=".2em"/><mi>sen</mi><mo>(</mo><mi>k</mi><mi>x</mi><mo>)</mo><mspace width=".2em"/><mi>cos</mi><mo>(</mo><mi>ω</mi><mi>t</mi><mo>)</mo>
+        </math></div>
+        <p>Cada punto oscila en el tiempo con amplitud <math><mi>A</mi><mspace width=".15em"/><mi>sen</mi><mo>(</mo><mi>k</mi><mi>x</mi><mo>)</mo></math>, que depende de su posición.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h3>2. Velocidad de propagación</h3>
+        <p>Depende solo de la tensión <math><mi>T</mi></math> y de la densidad lineal de masa <math><mi>μ</mi></math> de la cuerda:</p>
+        <div class="eq"><math display="block">
+          <mi>v</mi><mo>=</mo><msqrt><mfrac><mi>T</mi><mi>μ</mi></mfrac></msqrt>
+        </math></div>
+        <p>Si se aumenta la tensión, la onda viaja más rápido. Si la cuerda es más pesada (mayor <math><mi>μ</mi></math>), viaja más lento.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h3>3. Modos normales (extremos fijos)</h3>
+        <p>Los extremos <math><mi>x</mi><mo>=</mo><mn>0</mn></math> y <math><mi>x</mi><mo>=</mo><mi>L</mi></math> deben ser nodos, así que en la cuerda debe caber un número entero de medias longitudes de onda:</p>
+        <div class="eq"><math display="block">
+          <mi>L</mi><mo>=</mo><mi>n</mi><mfrac><msub><mi>λ</mi><mi>n</mi></msub><mn>2</mn></mfrac>
+          <mspace width="1em"/><mo>⇒</mo><mspace width="1em"/>
+          <msub><mi>λ</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mn>2</mn><mi>L</mi></mrow><mi>n</mi></mfrac>
+        </math></div>
+        <div class="eq"><math display="block">
+          <msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mfrac><mi>v</mi><msub><mi>λ</mi><mi>n</mi></msub></mfrac><mo>=</mo><mfrac><mi>n</mi><mrow><mn>2</mn><mi>L</mi></mrow></mfrac><msqrt><mfrac><mi>T</mi><mi>μ</mi></mfrac></msqrt><mo>=</mo><mi>n</mi><mspace width=".1em"/><msub><mi>f</mi><mn>1</mn></msub>
+          <mo>,</mo><mspace width="1em"/><mi>n</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mo>…</mo>
+        </math></div>
+        <p><math><msub><mi>f</mi><mn>1</mn></msub></math> es la frecuencia fundamental (primer armónico). Las demás son múltiplos enteros de ella.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h3>4. Nodos y antinodos</h3>
+        <p><strong>Nodos:</strong> puntos que permanecen en reposo, donde <math><mi>sen</mi><mo>(</mo><mi>k</mi><mi>x</mi><mo>)</mo><mo>=</mo><mn>0</mn></math>:</p>
+        <div class="eq"><math display="block">
+          <msub><mi>x</mi><mtext>nodo</mtext></msub><mo>=</mo><mi>m</mi><mfrac><mi>λ</mi><mn>2</mn></mfrac><mo>,</mo><mspace width="1em"/><mi>m</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>,</mo><mi>n</mi>
+        </math></div>
+        <p><strong>Antinodos (vientres):</strong> puntos de máxima amplitud:</p>
+        <div class="eq"><math display="block">
+          <msub><mi>x</mi><mtext>antinodo</mtext></msub><mo>=</mo><mo>(</mo><mn>2</mn><mi>m</mi><mo>+</mo><mn>1</mn><mo>)</mo><mfrac><mi>λ</mi><mn>4</mn></mfrac>
+        </math></div>
+        <p>En el armónico <math><mi>n</mi></math> hay <math><mi>n</mi><mo>+</mo><mn>1</mn></math> nodos y <math><mi>n</mi></math> antinodos. Dos nodos consecutivos están separados por <math><mi>λ</mi><mo>/</mo><mn>2</mn></math>.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h3>5. Relaciones útiles</h3>
+        <div class="eq"><math display="block">
+          <mi>k</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>λ</mi></mfrac><mo>=</mo><mfrac><mrow><mi>n</mi><mi>π</mi></mrow><mi>L</mi></mfrac>
+          <mo>,</mo><mspace width="1.2em"/>
+          <mi>ω</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>f</mi>
+          <mo>,</mo><mspace width="1.2em"/>
+          <mi>τ</mi><mo>=</mo><mfrac><mn>1</mn><mi>f</mi></mfrac>
+        </math></div>
+        <p><math><mi>k</mi></math> es el número de onda (rad/m), <math><mi>ω</mi></math> la frecuencia angular (rad/s) y <math><mi>τ</mi></math> el periodo (s). Se usa <math><mi>τ</mi></math> para el periodo porque la letra <math><mi>T</mi></math> ya designa la tensión.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SIMULADOR ================= -->
+<section id="simulador" class="pagina">
+  <div class="contenido">
+    <h2>Simulador interactivo</h2>
+    <p class="intro">Modifica las propiedades de la cuerda y el armónico. Los resultados y la gráfica se actualizan al instante. La animación se muestra en cámara lenta porque las frecuencias reales son demasiado altas para seguirlas a simple vista.</p>
+
+    <div class="sim">
+      <!-- Controles -->
+      <div class="tarjeta">
+        <h3>Parámetros</h3>
+        <div class="control">
+          <div class="control-cab"><label for="T">Tensión T</label><output id="T-out" for="T"></output></div>
+          <input type="range" id="T" min="10" max="200" step="1" value="100">
+        </div>
+        <div class="control">
+          <div class="control-cab"><label for="mu">Densidad lineal μ</label><output id="mu-out" for="mu"></output></div>
+          <input type="range" id="mu" min="0.001" max="0.1" step="0.001" value="0.01">
+        </div>
+        <div class="control">
+          <div class="control-cab"><label for="L">Longitud L</label><output id="L-out" for="L"></output></div>
+          <input type="range" id="L" min="0.5" max="10" step="0.1" value="2">
+        </div>
+        <div class="control">
+          <div class="control-cab"><label for="A">Amplitud A (antinodo)</label><output id="A-out" for="A"></output></div>
+          <input type="range" id="A" min="0.05" max="1" step="0.05" value="0.5">
+        </div>
+        <div class="control">
+          <div class="control-cab"><label for="n">Armónico n</label><output id="n-out" for="n"></output></div>
+          <input type="range" id="n" min="1" max="10" step="1" value="1">
+        </div>
+        <div class="control">
+          <div class="control-cab"><label for="vel">Cámara lenta</label><output id="vel-out" for="vel"></output></div>
+          <input type="range" id="vel" min="-4" max="0" step="0.05" value="-1.7" disabled>
+          <label class="check"><input type="checkbox" id="auto" checked> Ajuste automático (0,5 oscilaciones por segundo en pantalla)</label>
+          <span class="ayuda" id="vel-ayuda"></span>
+        </div>
+        <label class="check"><input type="checkbox" id="comps"> Mostrar las dos ondas viajeras componentes</label>
+        <div class="botones">
+          <button id="btnPlay" type="button">▶ Iniciar</button>
+          <button id="btnReset" type="button">↺ Reiniciar t</button>
+        </div>
+      </div>
+
+      <!-- Gráfica -->
+      <figure class="tarjeta grafica" style="margin:0">
+        <div class="lienzo"><canvas id="lienzo" role="img" aria-label="Gráfica de la cuerda vibrando"></canvas></div>
+        <ul class="leyenda">
+          <li><span class="sw"></span>Cuerda y(x, t)</li>
+          <li><span class="sw env"></span>Envolvente ±A sen(kx)</li>
+          <li><span class="pt"></span>Nodos</li>
+          <li><span class="pt anti"></span>Antinodos</li>
+          <li id="leyComp1" hidden><span class="sw c1"></span>y₁ (viaja →)</li>
+          <li id="leyComp2" hidden><span class="sw c2"></span>y₂ (viaja ←)</li>
+        </ul>
+        <div class="estado num">
+          <span id="tSim">t simulado = 0 s</span>
+          <span id="fVista"></span>
+        </div>
+        <figcaption>Eje horizontal: posición x (m). Eje vertical: desplazamiento y (m). La escala vertical está ampliada respecto a la horizontal.</figcaption>
+        <div>
+          <strong style="font-size:.9rem;color:var(--suave)">Ecuación con los valores actuales (x, y en m; t en s):</strong>
+          <div class="eq" id="ecuacion"></div>
+        </div>
+      </figure>
+    </div>
+
+    <h3 style="margin-top:2rem">Propiedades de la onda</h3>
+    <div class="resultados">
+      <div class="res">
+        <span class="et">Velocidad de propagación</span>
+        <span class="val" id="r-v"></span>
+        <div class="eq"><math display="block"><mi>v</mi><mo>=</mo><msqrt><mfrac><mi>T</mi><mi>μ</mi></mfrac></msqrt></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Longitud de onda</span>
+        <span class="val" id="r-l"></span>
+        <div class="eq"><math display="block"><msub><mi>λ</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mn>2</mn><mi>L</mi></mrow><mi>n</mi></mfrac></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Frecuencia del armónico</span>
+        <span class="val" id="r-f"></span>
+        <div class="eq"><math display="block"><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mfrac><mi>n</mi><mrow><mn>2</mn><mi>L</mi></mrow></mfrac><mi>v</mi></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Frecuencia fundamental</span>
+        <span class="val" id="r-f1"></span>
+        <div class="eq"><math display="block"><msub><mi>f</mi><mn>1</mn></msub><mo>=</mo><mfrac><mi>v</mi><mrow><mn>2</mn><mi>L</mi></mrow></mfrac></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Periodo</span>
+        <span class="val" id="r-p"></span>
+        <div class="eq"><math display="block"><mi>τ</mi><mo>=</mo><mfrac><mn>1</mn><msub><mi>f</mi><mi>n</mi></msub></mfrac></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Número de onda</span>
+        <span class="val" id="r-k"></span>
+        <div class="eq"><math display="block"><mi>k</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><msub><mi>λ</mi><mi>n</mi></msub></mfrac></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Frecuencia angular</span>
+        <span class="val" id="r-w"></span>
+        <div class="eq"><math display="block"><mi>ω</mi><mo>=</mo><mn>2</mn><mi>π</mi><msub><mi>f</mi><mi>n</mi></msub></math></div>
+      </div>
+      <div class="res">
+        <span class="et">Nodos / antinodos</span>
+        <span class="val" id="r-na"></span>
+        <div class="eq"><math display="block"><mi>n</mi><mo>+</mo><mn>1</mn><mspace width=".4em"/><mo>/</mo><mspace width=".4em"/><mi>n</mi></math></div>
+      </div>
+    </div>
+
+    <div class="tarjeta" style="margin-top:1.4rem">
+      <h3>Primeros armónicos con los parámetros actuales</h3>
+      <p style="color:var(--suave);font-size:.92rem;margin:0">La fila resaltada es el armónico que se está simulando.</p>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>n</th><th>λ (m)</th><th>f (Hz)</th><th>Nodos</th><th>Antinodos</th></tr></thead>
+          <tbody id="tabla"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REFERENCIAS ================= -->
+<section id="referencias" class="pagina">
+  <div class="contenido">
+    <h2>Referencias</h2>
+    <div class="tarjeta">
+      <ul class="refs">
+        <li>Serway, R. A. y Jewett, J. W. <em>Física para ciencias e ingeniería</em>, Vol. 1. Cengage Learning. Capítulo «Superposición y ondas estacionarias».</li>
+        <li>Young, H. D. y Freedman, R. A. <em>Física universitaria (Sears–Zemansky)</em>, Vol. 1. Pearson. Capítulo «Ondas mecánicas»: ondas estacionarias en una cuerda y modos normales.</li>
+        <li>Halliday, D., Resnick, R. y Walker, J. <em>Fundamentos de física</em>, Vol. 1. Patria / Wiley. Capítulo «Ondas I».</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><strong>Universidad Tecnológica de Pereira · Física III · Movimiento ondulatorio</strong></p>
+  <p>Eilyn Daniela Acevedo · Sara Vanesa García · Freiner Yulian Granados</p>
+  <p>Pereira, 2026</p>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const fmt = (x, d = 2) => Number(x).toLocaleString("es-CO", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmtSig = x => {               // formato con cifras adaptadas a la magnitud
+    const a = Math.abs(x);
+    if (a >= 1000) return fmt(x, 0);
+    if (a >= 100) return fmt(x, 1);
+    if (a >= 1) return fmt(x, 2);
+    if (a >= 0.01) return fmt(x, 3);
+    return fmt(x, 5);
+  };
+
+  /* ---------- Onda de la portada ---------- */
+  (function portada() {
+    const W = 600, H = 140, A = 50, n = 3, pts = 160;
+    let s = "", e1 = "", e2 = "";
+    for (let i = 0; i <= pts; i++) {
+      const x = i / pts * W, sx = Math.sin(n * Math.PI * i / pts);
+      const p = (i ? "L" : "M") + x.toFixed(1) + " ";
+      s += p + (H / 2 - A * 0.75 * sx).toFixed(1) + " ";
+      e1 += p + (H / 2 - A * sx).toFixed(1) + " ";
+      e2 += p + (H / 2 + A * sx).toFixed(1) + " ";
+    }
+    $("cuerdaPortada").setAttribute("d", s);
+    $("envSup").setAttribute("d", e1);
+    $("envInf").setAttribute("d", e2);
+  })();
+
+  /* ---------- Estado ---------- */
+  const S = { T: 100, mu: 0.01, L: 2, A: 0.5, n: 1, auto: true, logVel: -1.7, comps: false, run: false, t: 0, last: 0 };
+  const F = {};   // magnitudes físicas calculadas
+
+  const ids = ["T", "mu", "L", "A", "n", "vel"];
+  const canvas = $("lienzo"), ctx = canvas.getContext("2d");
+
+  function calcular() {
+    F.v = Math.sqrt(S.T / S.mu);
+    F.lam = 2 * S.L / S.n;
+    F.f = S.n * F.v / (2 * S.L);
+    F.f1 = F.v / (2 * S.L);
+    F.k = S.n * Math.PI / S.L;
+    F.w = 2 * Math.PI * F.f;
+    F.per = 1 / F.f;
+    F.factor = S.auto ? 0.5 / F.f : Math.pow(10, S.logVel);
+  }
+
+  function leer() {
+    S.T = +$("T").value;
+    S.mu = +$("mu").value;
+    S.L = +$("L").value;
+    S.A = +$("A").value;
+    S.n = parseInt($("n").value, 10);
+    S.auto = $("auto").checked;
+    S.comps = $("comps").checked;
+    $("vel").disabled = S.auto;
+    calcular();
+    if (S.auto) { S.logVel = Math.log10(F.factor); $("vel").value = Math.min(0, Math.max(-4, S.logVel)); }
+    else S.logVel = +$("vel").value;
+    calcular();
+  }
+
+  function mostrar() {
+    $("T-out").textContent = fmt(S.T, 0) + " N";
+    $("mu-out").textContent = fmt(S.mu, 3) + " kg/m";
+    $("L-out").textContent = fmt(S.L, 1) + " m";
+    $("A-out").textContent = fmt(S.A, 2) + " m";
+    $("n-out").textContent = S.n;
+    $("vel-out").textContent = "×" + fmtSig(F.factor);
+    $("vel-ayuda").textContent = "1 s en pantalla equivale a " + fmtSig(F.factor) + " s reales.";
+    const fv = F.f * F.factor;
+    $("fVista").textContent = "Oscilaciones vistas: " + fmt(fv, 2) + " por segundo" + (fv > 8 ? " (demasiado rápido: aumenta la cámara lenta)" : "");
+
+    $("r-v").textContent = fmtSig(F.v) + " m/s";
+    $("r-l").textContent = fmtSig(F.lam) + " m";
+    $("r-f").textContent = fmtSig(F.f) + " Hz";
+    $("r-f1").textContent = fmtSig(F.f1) + " Hz";
+    $("r-p").textContent = fmtSig(F.per) + " s";
+    $("r-k").textContent = fmtSig(F.k) + " rad/m";
+    $("r-w").textContent = fmtSig(F.w) + " rad/s";
+    $("r-na").textContent = (S.n + 1) + " / " + S.n;
+
+    $("ecuacion").innerHTML =
+      '<math display="block"><mi>y</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>t</mi><mo>)</mo><mo>=</mo>' +
+      "<mn>" + fmt(S.A, 2) + "</mn><mspace width=\".2em\"/><mi>sen</mi><mo>(</mo><mn>" + fmtSig(F.k) + "</mn><mi>x</mi><mo>)</mo>" +
+      "<mspace width=\".2em\"/><mi>cos</mi><mo>(</mo><mn>" + fmtSig(F.w) + "</mn><mi>t</mi><mo>)</mo></math>";
+
+    let filas = "";
+    const nMax = Math.max(6, S.n);
+    for (let m = 1; m <= nMax; m++) {
+      filas += '<tr class="' + (m === S.n ? "actual" : "") + '"><td>' + m + "</td><td>" + fmtSig(2 * S.L / m) +
+        "</td><td>" + fmtSig(m * F.f1) + "</td><td>" + (m + 1) + "</td><td>" + m + "</td></tr>";
+    }
+    $("tabla").innerHTML = filas;
+    $("leyComp1").hidden = $("leyComp2").hidden = !S.comps;
+  }
+
+  function pasoBonito(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const r = raw / p;
+    return (r <= 1 ? 1 : r <= 2 ? 2 : r <= 2.5 ? 2.5 : r <= 5 ? 5 : 10) * p;
+  }
+
+  function dibujar() {
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    if (!W || !H) return;
+    if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    const m = { l: 46, r: 24, t: 14, b: 30 };
+    const pw = W - m.l - m.r, ph = H - m.t - m.b;
+    const Ymax = 1.2;
+    const X = x => m.l + x / S.L * pw;
+    const Y = y => m.t + ph / 2 - y / Ymax * (ph / 2);
+    const fuente = Math.max(11, Math.min(13, W / 55));
+    ctx.font = fuente + "px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
+
+    // Rejilla y marcas del eje vertical
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "#5b6878";
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    const yTicks = ph > 170 ? [-1, -0.5, 0, 0.5, 1] : [-1, 0, 1];
+    yTicks.forEach(v => {
+      ctx.strokeStyle = v === 0 ? "#b9c3d1" : "#e7ecf3";
+      ctx.beginPath(); ctx.moveTo(m.l, Y(v)); ctx.lineTo(m.l + pw, Y(v)); ctx.stroke();
+      ctx.fillText(fmt(v, v % 1 ? 1 : 0), m.l - 8, Y(v));
+    });
+
+    // Marcas del eje horizontal (cantidad según el ancho disponible para que no se encimen)
+    const maxMarcas = Math.max(2, Math.floor(pw / 64));
+    const paso = pasoBonito(S.L / maxMarcas);
+    const dec = paso < 1 ? (paso < 0.5 ? (paso === 0.25 ? 2 : 1) : 1) : 0;
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    for (let x = 0; x <= S.L + 1e-9; x += paso) {
+      ctx.strokeStyle = "#eef2f7";
+      ctx.beginPath(); ctx.moveTo(X(x), m.t); ctx.lineTo(X(x), m.t + ph); ctx.stroke();
+      ctx.fillText(fmt(x, dec), X(x), m.t + ph + 8);
+    }
+
+    const N = Math.max(200, Math.min(900, Math.round(pw * 1.2)));
+    const wt = F.w * S.t;
+
+    // Envolvente
+    ctx.setLineDash([6, 5]); ctx.strokeStyle = "#8a97a8"; ctx.lineWidth = 1.5;
+    [1, -1].forEach(sg => {
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) { const x = i / N * S.L; const y = sg * S.A * Math.sin(F.k * x); i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Antinodos
+    ctx.strokeStyle = "#1f9d55"; ctx.lineWidth = 1.5; ctx.setLineDash([2, 4]);
+    for (let j = 0; j < S.n; j++) {
+      const xa = (2 * j + 1) * F.lam / 4;
+      ctx.beginPath(); ctx.moveTo(X(xa), Y(S.A)); ctx.lineTo(X(xa), Y(-S.A)); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Ondas componentes
+    if (S.comps) {
+      const comp = (signo, color) => {
+        ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+        for (let i = 0; i <= N; i++) {
+          const x = i / N * S.L; const y = S.A / 2 * Math.sin(F.k * x + signo * wt);
+          i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y));
+        }
+        ctx.stroke();
+      };
+      comp(-1, "#e08a00");
+      comp(+1, "#7b4fc9");
+    }
+
+    // Cuerda
+    ctx.strokeStyle = "#1a4f8e"; ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    const c = Math.cos(wt);
+    for (let i = 0; i <= N; i++) { const x = i / N * S.L; const y = S.A * Math.sin(F.k * x) * c; i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+    ctx.stroke();
+
+    // Soportes fijos
+    ctx.fillStyle = "#34495e";
+    ctx.fillRect(X(0) - 6, Y(0.35), 6, Y(-0.35) - Y(0.35));
+    ctx.fillRect(X(S.L), Y(0.35), 6, Y(-0.35) - Y(0.35));
+
+    // Nodos
+    ctx.fillStyle = "#d64545";
+    for (let j = 0; j <= S.n; j++) {
+      const xn = j * F.lam / 2;
+      ctx.beginPath(); ctx.arc(X(xn), Y(0), 5, 0, 2 * Math.PI); ctx.fill();
+    }
+  }
+
+  function actualizar() { leer(); mostrar(); dibujar(); }
+
+  function bucle(ts) {
+    if (!S.run) return;
+    if (!S.last) S.last = ts;
+    const dt = (ts - S.last) / 1000; S.last = ts;
+    if (dt > 0 && dt < 0.1) S.t += dt * F.factor;
+    $("tSim").textContent = "t simulado = " + fmtSig(S.t) + " s";
+    dibujar();
+    requestAnimationFrame(bucle);
+  }
+
+  ids.forEach(id => $(id).addEventListener("input", actualizar));
+  $("auto").addEventListener("change", actualizar);
+  $("comps").addEventListener("change", actualizar);
+
+  $("btnPlay").addEventListener("click", () => {
+    S.run = !S.run;
+    $("btnPlay").textContent = S.run ? "❚❚ Pausar" : "▶ Iniciar";
+    $("btnPlay").classList.toggle("activo", S.run);
+    if (S.run) { S.last = 0; requestAnimationFrame(bucle); }
+  });
+  $("btnReset").addEventListener("click", () => {
+    S.t = 0; $("tSim").textContent = "t simulado = 0 s"; dibujar();
+  });
+
+  if ("ResizeObserver" in window) new ResizeObserver(dibujar).observe(canvas.parentElement);
+  else window.addEventListener("resize", dibujar);
+  window.addEventListener("beforeprint", dibujar);
+
+  actualizar();
+})();
+</script>
+</body>
+</html>

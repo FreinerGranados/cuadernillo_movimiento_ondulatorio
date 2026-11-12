@@ -10,7 +10,20 @@
     <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
+    <button id="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="side-menu">☰</button>
+    <div id="menu-backdrop" hidden></div>
+    <aside id="side-menu" aria-label="Menú principal" inert>
+        <div class="menu-heading"><strong>Física III</strong><button id="menu-close" aria-label="Cerrar menú">×</button></div>
+        <p class="menu-caption">Movimiento ondulatorio</p>
+        <nav class="menu-links" aria-label="Cuadernillo y simuladores">
+            <a href="#cuadernillo" data-view="cuadernillo" aria-current="page">Cuadernillo</a>
+            <a href="#ondas-estacionarias" data-view="ondas-estacionarias">Ondas estacionarias · UTP</a>
+            <a href="#ondas-cuerdas" data-view="ondas-cuerdas">Simulador de ondas en cuerdas</a>
+        </nav>
+    </aside>
     <div id="app">
+        <header id="section-heading"><span>Física III</span><h1 id="view-title">Cuadernillo</h1></header>
+        <section id="simulator-container" aria-labelledby="view-title" hidden></section>
         <main id="book-container">
             <!-- Dynamic pages will be inserted here -->
         </main>

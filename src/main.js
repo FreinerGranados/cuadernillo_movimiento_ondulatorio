@@ -76,6 +76,72 @@ btnIndex.addEventListener('click', () => showPage(2)); // Asumiendo página 2 es
 window.goToPage = showPage;
 renderPages();
 
+// Shared navigation keeps the current book page when switching resources.
+const menu = document.getElementById('side-menu');
+const menuToggle = document.getElementById('menu-toggle');
+const backdrop = document.getElementById('menu-backdrop');
+const simulatorContainer = document.getElementById('simulator-container');
+const viewTitle = document.getElementById('view-title');
+const resources = {
+    'cuadernillo': { title: 'Cuadernillo' },
+    'ondas-estacionarias': { title: 'Ondas estacionarias · UTP', file: 'OndasEstacionarias_FisicaIII_UTP.html' },
+    'ondas-cuerdas': { title: 'Simulador de ondas en cuerdas', file: 'OndasCuerdas.html' }
+};
+
+function setMenuOpen(open) {
+    menu.inert = !open;
+    menu.classList.toggle('is-open', open);
+    backdrop.hidden = !open;
+    menuToggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
+    if (open) document.getElementById('menu-close').focus();
+    else menuToggle.focus();
+}
+
+menuToggle.addEventListener('click', () => setMenuOpen(menu.inert));
+document.getElementById('menu-close').addEventListener('click', () => setMenuOpen(false));
+backdrop.addEventListener('click', () => setMenuOpen(false));
+document.addEventListener('keydown', event => {
+    if (menu.inert) return;
+    if (event.key === 'Escape') setMenuOpen(false);
+    if (event.key === 'Tab') {
+        const items = menu.querySelectorAll('button, a');
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault(); last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault(); first.focus();
+        }
+    }
+});
+menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
+
+function selectView() {
+    const key = location.hash.slice(1);
+    const selected = Object.hasOwn(resources, key) ? key : 'cuadernillo';
+    const resource = resources[selected];
+    viewTitle.textContent = resource.title;
+    document.title = `${resource.title} - Física III`;
+    menu.querySelectorAll('a').forEach(link => {
+        if (link.dataset.view === selected) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+    });
+    const isBook = selected === 'cuadernillo';
+    bookContainer.hidden = !isBook;
+    document.getElementById('bottom-nav').hidden = !isBook;
+    simulatorContainer.hidden = isBook;
+    simulatorContainer.replaceChildren();
+    if (!isBook) {
+        const frame = document.createElement('iframe');
+        frame.title = resource.title;
+        frame.src = `${import.meta.env.BASE_URL}simuladores/${resource.file}`;
+        simulatorContainer.appendChild(frame);
+    }
+}
+window.addEventListener('hashchange', selectView);
+selectView();
+
 function initializeSimulations() {
     // Handled in individual page onLoad functions
 }
